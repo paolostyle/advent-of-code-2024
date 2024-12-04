@@ -6,7 +6,7 @@ run day:
 test day:
     go run ./day$(printf "%02d" {{day}}) -test
 
-create day:
+new day:
     #!/usr/bin/env bash
     set -euo pipefail
 

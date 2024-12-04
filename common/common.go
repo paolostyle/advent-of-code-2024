@@ -34,14 +34,18 @@ func Abs(x int) int {
 	return x
 }
 
+func StrToInt(str string) int {
+	num, err := strconv.Atoi(str)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return num
+}
+
 func StringsToNumbers(strings []string) []int {
 	nums := make([]int, len(strings))
 	for i, str := range strings {
-		num, err := strconv.Atoi(str)
-		if err != nil {
-			log.Fatal(err)
-		}
-		nums[i] = num
+		nums[i] = StrToInt(str)
 	}
 	return nums
 }
