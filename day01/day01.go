@@ -18,20 +18,18 @@ func splitIntoLists(input string) ([]int, []int) {
 	for _, location := range locations {
 		parts := strings.Fields(location)
 
-		if len(parts) == 2 {
-			leftLocation, err := strconv.Atoi(parts[0])
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			rightLocation, err := strconv.Atoi(parts[1])
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			leftList = append(leftList, leftLocation)
-			rightList = append(rightList, rightLocation)
+		leftLocation, err := strconv.Atoi(parts[0])
+		if err != nil {
+			log.Fatal(err)
 		}
+
+		rightLocation, err := strconv.Atoi(parts[1])
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		leftList = append(leftList, leftLocation)
+		rightList = append(rightList, rightLocation)
 	}
 
 	return leftList, rightList
@@ -46,12 +44,7 @@ func part1(input string) int {
 	sum := 0
 	for i, left := range leftList {
 		right := rightList[i]
-		diff := right - left
-		if diff > 0 {
-			sum += diff
-		} else {
-			sum -= diff
-		}
+		sum += common.Abs(right - left)
 	}
 
 	return sum
@@ -75,6 +68,7 @@ func part2(input string) int {
 
 func main() {
 	input := common.ReadInput(1)
+	fmt.Println("DAY 01")
 	fmt.Println("Part 1: ", part1(input))
 	fmt.Println("Part 2: ", part2(input))
 }

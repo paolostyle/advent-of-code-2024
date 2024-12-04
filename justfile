@@ -28,14 +28,14 @@ create day:
     import (
         "fmt"
 
-        "github.com/advent-of-code-2024/common"
+        "github.com/paolostyle/advent-of-code-2024/common"
     )
 
-    func part1() int {
+    func part1(input string) int {
         return 0
     }
 
-    func part2() int {
+    func part2(input string) int {
         return 0
     }
 
