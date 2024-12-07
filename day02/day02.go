@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+	"time"
 
 	"github.com/paolostyle/advent-of-code-2024/common"
 )
@@ -69,6 +70,7 @@ func part2(input string) int {
 }
 
 func main() {
+	defer common.TimeTrack(time.Now())
 	input := common.ReadInput(2)
 	fmt.Println("DAY 02")
 	fmt.Println("Part 1: ", part1(input))

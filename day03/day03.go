@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"regexp"
+	"time"
 
 	"github.com/paolostyle/advent-of-code-2024/common"
 )
@@ -48,6 +49,7 @@ func part2(input string) int {
 }
 
 func main() {
+	defer common.TimeTrack(time.Now())
 	input := common.ReadInput(3)
 	fmt.Println("DAY 03")
 	fmt.Println("Part 1: ", part1(input))

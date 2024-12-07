@@ -27,6 +27,7 @@ new day:
 
     import (
         "fmt"
+        "time"
 
         "github.com/paolostyle/advent-of-code-2024/common"
     )
@@ -40,6 +41,7 @@ new day:
     }
 
     func main() {
+        defer common.TimeTrack(time.Now())
         input := common.ReadInput({{day}})
         fmt.Println("DAY $DAY")
         fmt.Println("Part 1: ", part1(input))
