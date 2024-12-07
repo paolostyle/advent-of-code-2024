@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func ReadInput(day int) string {
@@ -48,4 +49,9 @@ func StringsToNumbers(strings []string) []int {
 		nums[i] = StrToInt(str)
 	}
 	return nums
+}
+
+func TimeTrack(start time.Time) {
+	elapsed := time.Since(start)
+	fmt.Println("took", elapsed)
 }
