@@ -1,23 +1,36 @@
 set quiet
 
-run day:
-    go run ./day$(printf "%02d" {{day}})
-
-test day:
-    go run ./day$(printf "%02d" {{day}}) -test
-
-new day:
+_get_input day:
     #!/usr/bin/env bash
     set -euo pipefail
 
     DAY="$(printf "%02d" {{day}})"
     NAME="day$DAY"
     mkdir -p "$NAME"
-    cd "$NAME"
-    curl -sS "https://adventofcode.com/2024/day/{{day}}/input" \
-        --cookie "session=$(cat ../.session)" > \
-        "input.txt"
+    cd "day$DAY"
+    if ! [ -f input.txt ]; then
+        curl -sS "https://adventofcode.com/2024/day/{{day}}/input" \
+            --cookie "session=$(cat ../.session)" > \
+            "input.txt"
+    fi
     touch "test_input.txt"
+
+run day: (_get_input day)
+    go run ./day$(printf "%02d" {{day}})
+
+test day: (_get_input day)
+    go run ./day$(printf "%02d" {{day}}) -test
+
+new day: (_get_input day)
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    DAY="$(printf "%02d" {{day}})"
+    NAME="day$DAY"
+    
+    mkdir -p "$NAME"
+    cd "day$DAY"
+
     go mod init "github.com/paolostyle/advent-of-code-2024/$NAME"
     cd ..
     go work edit -use "./$NAME"
