@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -11,11 +10,7 @@ import (
 
 func toCode(input string) []int {
 	chars := strings.Split(input, "")
-	code := make([]int, len(chars))
-	for i, val := range chars {
-		code[i], _ = strconv.Atoi(val)
-	}
-	return code
+	return common.StringsToNumbers(chars)
 }
 
 func part1(input string) int {

@@ -51,6 +51,19 @@ func StringsToNumbers(strings []string) []int {
 	return nums
 }
 
+func StringsToNumberSafe(strings []string, defaultValue int) []int {
+	nums := make([]int, len(strings))
+	for i, str := range strings {
+		num, err := strconv.Atoi(str)
+		if err != nil {
+			nums[i] = defaultValue
+		} else {
+			nums[i] = num
+		}
+	}
+	return nums
+}
+
 func TimeTrack(start time.Time) {
 	elapsed := time.Since(start)
 	fmt.Println("took", elapsed)
