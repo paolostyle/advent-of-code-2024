@@ -9,31 +9,57 @@ import (
 	"github.com/paolostyle/advent-of-code-2024/common"
 )
 
-func part1(input string) int {
-	stones := common.StringsToNumbers(strings.Split(input, " "))
+type stoneIter struct {
+	stone int
+	iter  int
+}
 
-	for i := 0; i < 25; i++ {
-		newStones := []int{}
-		for _, stone := range stones {
-			strStone := strconv.Itoa(stone)
-			if stone == 0 {
-				newStones = append(newStones, 1)
-			} else if len(strStone)%2 == 0 {
-				leftStone, _ := strconv.Atoi(strStone[:len(strStone)/2])
-				rightStone, _ := strconv.Atoi(strStone[len(strStone)/2:])
-				newStones = append(newStones, leftStone, rightStone)
-			} else {
-				newStones = append(newStones, stone*2024)
-			}
-		}
-		stones = newStones
+var memo = make(map[stoneIter]int)
+
+func blink(stone int, iter int) int {
+	if iter == 0 {
+		return 1
 	}
 
-	return len(stones)
+	memoed := memo[stoneIter{stone, iter}]
+	if memoed != 0 {
+		return memoed
+	}
+
+	total := 0
+
+	strStone := strconv.Itoa(stone)
+	if stone == 0 {
+		total += blink(1, iter-1)
+	} else if len(strStone)%2 == 0 {
+		leftStone, _ := strconv.Atoi(strStone[:len(strStone)/2])
+		rightStone, _ := strconv.Atoi(strStone[len(strStone)/2:])
+		total += blink(leftStone, iter-1) + blink(rightStone, iter-1)
+	} else {
+		total = blink(stone*2024, iter-1)
+	}
+
+	memo[stoneIter{stone, iter}] = total
+
+	return total
+}
+
+func process(stones []int, iter int) int {
+	var total = 0
+	for _, num := range stones {
+		total += blink(num, iter)
+	}
+	return total
+}
+
+func part1(input string) int {
+	stones := common.StringsToNumbers(strings.Split(input, " "))
+	return process(stones, 25)
 }
 
 func part2(input string) int {
-	return 0
+	stones := common.StringsToNumbers(strings.Split(input, " "))
+	return process(stones, 75)
 }
 
 func main() {
