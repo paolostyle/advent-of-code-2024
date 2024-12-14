@@ -68,3 +68,13 @@ func TimeTrack(start time.Time) {
 	elapsed := time.Since(start)
 	fmt.Println("took", elapsed)
 }
+
+func BoolToInt(b bool) int {
+	var i int
+	if b {
+		i = 1
+	} else {
+		i = 0
+	}
+	return i
+}
