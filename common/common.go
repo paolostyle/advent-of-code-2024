@@ -43,6 +43,14 @@ func StrToInt(str string) int {
 	return num
 }
 
+func StrToFloat(str string) float64 {
+	num, err := strconv.ParseFloat(str, 64)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return num
+}
+
 func StringsToNumbers(strings []string) []int {
 	nums := make([]int, len(strings))
 	for i, str := range strings {
