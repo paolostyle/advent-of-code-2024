@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"regexp"
 	"strings"
 	"time"
@@ -23,109 +22,60 @@ type machine struct {
 	a, b, prize coord
 }
 
-func gcd(a, b int) int {
-	if a == 0 {
-		return b
-	}
-	return gcd(b%a, a)
-}
-
 func parseLine(line string) coord {
 	matches := lineRegex.FindAllStringSubmatch(line, -1)
 	return coord{common.StrToInt(matches[0][1]), common.StrToInt(matches[0][2])}
 }
 
-func parseInput(input string) []machine {
+func parseInput(input string, extraPrize int) []machine {
 	machineDefs := strings.Split(input, "\n\n")
 	machines := make([]machine, len(machineDefs))
 	for i, def := range machineDefs {
 		lines := strings.Split(def, "\n")
+		prize := parseLine(lines[2])
 		machines[i] = machine{
-			a:     parseLine(lines[0]),
-			b:     parseLine(lines[1]),
-			prize: parseLine(lines[2]),
+			a: parseLine(lines[0]),
+			b: parseLine(lines[1]),
+			prize: coord{
+				x: prize.x + extraPrize,
+				y: prize.y + extraPrize,
+			},
 		}
 	}
 	return machines
 }
 
+func machineCost(m machine) int {
+	b0 := (m.prize.y*m.a.x - m.a.y*m.prize.x) / (m.b.y*m.a.x - m.a.y*m.b.x)
+	a0 := (m.prize.x - b0*m.b.x) / m.a.x
+
+	if (m.a.x*a0+m.b.x*b0) == m.prize.x && (m.a.y*a0+m.b.y*b0) == m.prize.y {
+		return A_COST*a0 + B_COST*b0
+	} else {
+		return 0
+	}
+}
+
 func part1(input string) int {
-	machines := parseInput(input)
+	machines := parseInput(input, 0)
 	totalCost := 0
 
 	for _, machine := range machines {
-		ySolutions := make(map[coord]bool)
-		gcdY := gcd(machine.a.y, machine.b.y)
-
-		initialY := -1
-		for a := 0; a <= 100; a++ {
-			b := machine.prize.y/machine.b.y - machine.a.y*a/machine.b.y
-
-			if machine.a.y*a+machine.b.y*b == machine.prize.y {
-				initialY = a
-				break
-			}
-		}
-
-		if initialY == -1 {
-			continue
-		}
-
-		for a := initialY; a <= 100; a += machine.b.y / gcdY {
-			b := machine.prize.y/machine.b.y - machine.a.y*a/machine.b.y
-			ySolutions[coord{a, b}] = true
-		}
-
-		xSolutions := make(map[coord]bool)
-		gcdX := gcd(machine.a.x, machine.b.x)
-
-		initialX := -1
-		for a := 0; a <= 100; a++ {
-			b := machine.prize.x/machine.b.x - machine.a.x*a/machine.b.x
-
-			if machine.a.x*a+machine.b.x*b == machine.prize.x {
-				initialX = a
-				break
-			}
-		}
-
-		if initialX == -1 {
-			continue
-		}
-
-		for a := initialX; a <= 100; a += machine.b.x / gcdX {
-			b := machine.prize.x/machine.b.x - machine.a.x*a/machine.b.x
-			xSolutions[coord{a, b}] = true
-		}
-
-		validSolutions := make(map[coord]bool)
-
-		for ySolution := range ySolutions {
-			if xSolutions[ySolution] {
-				validSolutions[ySolution] = true
-			}
-		}
-
-		if len(validSolutions) == 0 {
-			continue
-		}
-
-		minCost := math.MaxInt32
-		for soution := range validSolutions {
-			cost := A_COST*soution.x + B_COST*soution.y
-			if cost < minCost {
-				minCost = cost
-			}
-		}
-
-		totalCost += minCost
+		totalCost += machineCost(machine)
 	}
 
 	return totalCost
 }
 
 func part2(input string) int {
-	return 0
+	machines := parseInput(input, 10000000000000)
+	totalCost := 0
+
+	for _, machine := range machines {
+		totalCost += machineCost(machine)
+	}
+
+	return totalCost
 }
 
 func main() {
@@ -135,6 +85,3 @@ func main() {
 	fmt.Println("Part 1: ", part1(input))
 	fmt.Println("Part 2: ", part2(input))
 }
-
-/// -3 * 86 + 7 * 37 = 1
-///
